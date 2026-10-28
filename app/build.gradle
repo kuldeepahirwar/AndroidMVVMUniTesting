@@ -5,12 +5,13 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    namespace "com.kuldeep.mvvmtest"
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.cheezycode.mvvmtest"
         minSdk 21
-        targetSdk 32
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -28,8 +29,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
-        freeCompilerArgs = ['-Xjvm-default=compatibility']
+        jvmTarget = '11'
+        freeCompilerArgs = ['-Xjvm-default=all-compatibility'] // CORRECT
     }
 
     sourceSets{
@@ -40,6 +41,13 @@ android {
             java.srcDirs += "src/sharedTest/java"
         }
     }
+    testOptions {
+            unitTests.all {
+                // This flag is often required for Mockito 5 on JDK 17+
+                // to allow bytecode instrumentation of final classes.
+                jvmArgs("-XX:+EnableDynamicAgentLoading")
+            }
+        }
 }
 
 dependencies {
@@ -63,7 +71,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
 
@@ -72,8 +80,7 @@ dependencies {
 
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
 
-    testImplementation 'org.mockito:mockito-core:3.6.0'
-    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
-
+    testImplementation "org.mockito:mockito-core:5.14.2"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
 
 }
